@@ -1,0 +1,5 @@
+Results from test suites in the pset
+
+ps1a.py - PASS
+ps1b.py - PASS
+ps1c.py - PASS
