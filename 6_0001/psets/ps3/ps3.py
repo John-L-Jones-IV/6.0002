@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # 6.0001 Problem Set 3
 #
 # The 6.0001 Word Game
@@ -120,7 +121,7 @@ def display_hand(hand):
 
     hand: dictionary (string -> int)
     """
-    
+    print('Current Hand:', end=' ') 
     for letter in hand.keys():
         for j in range(hand[letter]):
              print(letter, end=' ')      # print all on the same line
@@ -275,7 +276,7 @@ def calculate_handlen(hand):
     returns: integer
     """
     
-    pass  # TO DO... Remove this line when you implement this function
+    return sum(hand.values())
 
 def play_hand(hand, word_list):
 
@@ -310,35 +311,51 @@ def play_hand(hand, word_list):
     
     # BEGIN PSEUDOCODE <-- Remove this comment when you implement this function
     # Keep track of the total score
-    
+    score = 0
+ 
     # As long as there are still letters left in the hand:
+    while calculate_handlen(hand) > 0:  
     
         # Display the hand
+        display_hand(hand)
         
         # Ask user for input
+        word = input('Enter word, or "!!" to indicate that you are finsihed: ')
         
         # If the input is two exclamation points:
+        if word == '!!':
         
             # End the game (break out of the loop)
+            break
 
             
         # Otherwise (the input is not two exclamation points):
-
+        else:
             # If the word is valid:
-
+            if is_valid_word(word, hand, word_list):
+               
                 # Tell the user how many points the word earned,
+                word_score = get_word_score(word,calculate_handlen(hand))
+                print('"'+str(word)+'" earned', word_score, 'points. ', end='')
                 # and the updated total score
+                score += word_score
+                print('Total:', score, 'points \n')
 
             # Otherwise (the word is not valid):
+            else:
                 # Reject invalid word (print a message)
+                print('That is not a valid word. Please choose another word.')
                 
             # update the user's hand by removing the letters of their inputted word
+            hand = update_hand(hand,word)
+            
             
 
     # Game is over (user entered '!!' or ran out of letters),
     # so tell user the total score
-
+    print('\nTotal score: ', score, '\n')
     # Return the total score as result of function
+    return score
 
 
 
@@ -420,31 +437,37 @@ def play_game(word_list):
 # when the program is run directly, instead of through an import statement
 #
 if __name__ == '__main__':
-#    word_list = load_words()
+    word_list = load_words()
+    hand = {'a':1, 'j':1, 'e':1, 'f':1, '*':1, 'r':1, 'x':1}
+    play_hand(hand, word_list)
+    
+    hand = {'a':1, 'c':1, 'f':1, 'i':1, '*':1, 't':1, 'x':1}
+    play_hand(hand, word_list)
 #    play_game(word_list)
 #    
-##    print(SCRABBLE_LETTER_VALUES['b'])
+#    print(SCRABBLE_LETTER_VALUES['b'])
 #    print(get_frequency_dict('hello'))
-    
-    word_list = load_words()
-    
-    #  # test 2
-    # print('TEST 2---------------------------')
-    # hand = {'n': 1, 'h': 1, '*': 1, 'y': 1, 'd':1, 'w':1, 'e': 2}
-    # word = "honey"
-    # x = is_valid_word(word, hand ,word_list)
-    # print(word, 'Expecting: False ', x)
-    
-    # # test 3
-    # print('TEST 3---------------------------')
-    # hand = {'n': 1, 'h': 1, '*': 1, 'y': 1, 'd':1, 'w':1, 'e': 2}
-    # word = "h*ney"
-    # x = is_valid_word(word, hand ,word_list)
-    # print(word, 'Expecting: True ', x)
-    
+#   
+#    word_list = load_words()
+#    
+#    # test 2
+#    print('TEST 2---------------------------')
+#    hand = {'n': 1, 'h': 1, '*': 1, 'y': 1, 'd':1, 'w':1, 'e': 2}
+#    print(calculate_handlen(hand))
+#    hand = {'n': 0, 'h': 1, '*': 1, 'y': 1, 'd':1, 'w':1, 'e': 2}
+#    print(calculate_handlen(hand))
+#    word = "honey"
+#    x = is_valid_word(word, hand ,word_list)
+#    print(word, 'Expecting: False ', x)
+#    
+#    # test 3
+#    print('TEST 3---------------------------')
+#    hand = {'n': 1, 'h': 1, '*': 1, 'y': 1, 'd':1, 'w':1, 'e': 2}
+#    word = "h*ney"
+#    x = is_valid_word(word, hand ,word_list)
+#    print(word, 'Expecting: True ', x)
+#    
 #    my_words_list = ['aa', 'honey', 'apple','badass', 'baaa']
 #    for word in my_words_list:
-#        print(replace_vowels(word))
-##        print(find_vowels(word))
-    
-    
+#    print(replace_vowels(word))
+#    print(find_vowels(word)) 
