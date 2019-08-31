@@ -382,7 +382,7 @@ def play_hand(hand, word_list):
         display_hand(hand)
 
         # Ask user for input
-        word = input('Enter word, or "!!" to indicate that you are finished: ')
+        word = input('Enter word, or "!!" to indicate that you are done: ')
 
         # If the input is two exclamation points:
         if word == '!!':
@@ -413,9 +413,9 @@ def play_hand(hand, word_list):
 
     # Game is over (user entered '!!' or ran out of letters),
     if calculate_handlen(hand) == 0:
-        print('Ran out of letters. ',end='')
+        print('Ran out of letters ')
 
-    print('Total score: ', score)
+    print('Total score for this hand: ', score)
 
     # Return the total score as result of function
     return score
@@ -551,17 +551,20 @@ def play_game(word_list):
                 replaced_letter = str(input('Which letter would you like to replace: ')).lower()
                 hand = substitute_hand(hand, replaced_letter)
                 letter_subs -= 1
+            else:
+                print() # print new line
 
+        saved_hand = hand.copy()
         hand_score = play_hand(hand, word_list)
-        
+        print('----------')
+
         if hand_replays > 0:
             s_replay = str(input('Would you like to replay the hand? ')).lower()
             if s_replay == 'y' or s_replay =='yes':
-                series_score -= hand_score # if replaying hand undo score from last hand
-                hand = deal_hand(HAND_SIZE)
+                hand = saved_hand.copy()
                 print('Current Hand:', end=' ') 
                 display_hand(hand)
-                hand_score += play_hand(hand, word_list)
+                hand_score = play_hand(hand, word_list)
                 hand_replays -= 1
 
         series_score += hand_score
