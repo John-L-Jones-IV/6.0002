@@ -115,10 +115,9 @@ class SubMessage(object):
 
         const_chars = CONSONANTS_LOWER + CONSONANTS_UPPER + punctuation + whitespace + digits
         d = {char: char for char in const_chars}
-
         for i in range(5):
             d[VOWELS_LOWER[i]] = permutation[i]
-            d[VOWELS_LOWER[i].upper()] = permutation[i].upper()
+            d[VOWELS_UPPER[i]] = permutation[i].upper()
 
         return d
 
@@ -172,7 +171,6 @@ class EncryptedSubMessage(SubMessage):
         from string import punctuation, whitespace, digits
 
         max_valid_words = 0
-        best_dict = None
         best_message = self.message_text
         
         fixed_chars = CONSONANTS_UPPER + CONSONANTS_LOWER + punctuation + whitespace + digits
@@ -186,7 +184,6 @@ class EncryptedSubMessage(SubMessage):
                 d[VOWELS_UPPER[i]] = perm[i].upper()
 
             decrypt_message = ''
-
             for char in self.message_text:
                 decrypt_message += d[char]
 
@@ -196,7 +193,6 @@ class EncryptedSubMessage(SubMessage):
 
             if valid_word_cnt > max_valid_words:
                 max_valid_words = valid_word_cnt
-                best_dict = d
                 best_message = decrypt_message 
 
         return best_message

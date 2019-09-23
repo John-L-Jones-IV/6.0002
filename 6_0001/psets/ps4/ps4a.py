@@ -23,22 +23,18 @@ def get_permutations(sequence):
     Note: depending on your implementation, you may return the permutations in
     a different order than what is listed here.
     '''
+    permutations = []
     
-    # BASE CASE #
     if len(sequence) <= 1:
-        return [sequence]
+        permutations.append(sequence)
     
-    # RECURSIVE CASE #
     else:
-        # get permutations of all but the first letter
-        perms_sub = get_permutations(sequence[1:])
-        perms = []
+        sub_perms = get_permutations(sequence[1:])
+        for s in sub_perms:
+            for i in range(len(s)+1):
+                permutations.append(s[:i] + sequence[0] + s[i:])
 
-        for i in range(len(sequence)): # for each letter in sequence
-            for perm in perms_sub:
-                perms.append(perm[:i] + sequence[0] + perm[i:])
-
-        return perms
+    return permutations
 
 if __name__ == '__main__':
 #    # Put three example test cases here (for your sanity, limit your inputs

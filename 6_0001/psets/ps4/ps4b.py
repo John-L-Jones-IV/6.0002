@@ -228,7 +228,6 @@ class CiphertextMessage(Message):
         Returns: a tuple of the best shift value used to decrypt the message
         and the decrypted message text using that shift value
         '''
-        PRINT = False
         max_valid_words = 0
         best_shift = None
         best_message = None
@@ -236,22 +235,13 @@ class CiphertextMessage(Message):
         for try_shift in range(26):
             try_message = self.apply_shift(try_shift)
             valid_word_cnt = 0
-
             for word in try_message.split():
-                if PRINT: print(word, end = ' ')
                 if is_word(self.valid_words, word):
                     valid_word_cnt += 1
-
             if valid_word_cnt > max_valid_words:
                 best_shift = try_shift
                 max_valid_words = valid_word_cnt
                 best_message = try_message
-                
-            if PRINT:
-                print('\n-----')
-                print('try_shift:', try_shift, '\tvalid words:', valid_word_cnt)
-                print('-----')
-            valid_word_cnt = 0
 
         return (best_shift, best_message)
 
