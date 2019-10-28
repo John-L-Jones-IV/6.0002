@@ -9,12 +9,10 @@ import string
 import time
 import threading
 from project_util import translate_html
-# from mkTkinter import *
-from tkinter import *
+from tkinter import * # mtTkinter is depreciated? 
 from datetime import datetime
 from datetime import timedelta
 import pytz
-
 
 #-----------------------------------------------------------------------
 
@@ -282,11 +280,11 @@ def main_thread(master):
     # A sample trigger list - you might need to change the phrases to correspond
     # to what is currently in the news
     try:
-        t1 = TitleTrigger("election")
-        t2 = DescriptionTrigger("Trump")
-        t3 = DescriptionTrigger("Clinton")
-        t4 = AndTrigger(t2, t3)
-        triggerlist = [t1, t4]
+        #        t1 = TitleTrigger("election")
+        #        t2 = DescriptionTrigger("Trump")
+        #        t3 = DescriptionTrigger("Clinton")
+        #        t4 = AndTrigger(t2, t3)
+        #        triggerlist = [t1, t4]
 
         # Problem 11
         # TODO: After implementing read_trigger_config, uncomment this line 
@@ -329,6 +327,7 @@ def main_thread(master):
             stories.extend(process("http://news.yahoo.com/rss/topstories"))
 
             stories = filter_stories(stories, triggerlist)
+            print(triggerlist)
 
             list(map(get_cont, stories))
             scrollbar.config(command=cont.yview)
@@ -347,25 +346,3 @@ if __name__ == '__main__':
     t = threading.Thread(target=main_thread, args=(root,))
     t.start()
     root.mainloop()
-
-#    nums = [1, 2, 3, 4]
-#    lets = ['a', 'b', 'c', 'd']
-#    for n in nums:
-#        for l in lets:
-#            print(n, l)
-
-#    s = 't1,TITLE,election'#
-#    s = s.split(',')
-#    print(isinstance(s[2], str))
-
-#    d = {'a':1, 'b':2, 'c':3}
-#    print(d.get('a'))
-#    print(d.get('b'))
-#    print(d.get('c'))
-#    print(d.get('d'))
-#    
-#    print(d.get('d') is None)
-#    print(d.get('d') == None)
-
-#    t1 = TitleTrigger('bobby')
-#    print(str(t1))
