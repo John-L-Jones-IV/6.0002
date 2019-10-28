@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.7
+#!/usr/bin/env python3
 # 6.0001/6.00 Problem Set 5 - RSS Feed Filter
 # Name: <John-L-Jones-IV>
 # Collaborators: <iamwhil>
@@ -9,7 +9,8 @@ import string
 import time
 import threading
 from project_util import translate_html
-from mkTkinter import *
+# from mkTkinter import *
+from tkinter import *
 from datetime import datetime
 from datetime import timedelta
 import pytz
@@ -95,6 +96,8 @@ class Trigger(object):
 class PhraseTrigger(Trigger):
     def __init__(self, phrase):
         self.phrase = phrase.lower()
+    def get_phrase(self):
+        return self.phrase
     def is_phrase_in(self,text):
         """
         Return True if self.phrase is in text, ignoring capitalization, punctuation and repeated spaces
@@ -106,7 +109,7 @@ class PhraseTrigger(Trigger):
 
         # serperate into lists of words removing spaces
         text_words = text_copy.split()
-        phrase_words = self.phrase.split()
+        phrase_words = self.get_phrase().split()
 
         # find suspect phrases in text
         suspects = []
@@ -219,13 +222,13 @@ def filter_stories(stories, triggerlist):
 
     Returns: a list of only the stories for which a trigger in triggerlist fires.
     """
-    # TODO: Problem 10
-    # This is a placeholder
-    # (we're just returning all the stories, with no filtering)
-    #  return stories
-    pass
+    stories_out = []
+    for t in triggerlist:
+        for s in stories:
+            if t.evaluate(s):
+                stories_out.append(s)
 
-
+    return stories_out
 
 #======================
 # User-Specified Triggers
@@ -247,16 +250,34 @@ def read_trigger_config(filename):
         if not (len(line) == 0 or line.startswith('//')):
             lines.append(line)
 
-    # TODO: Problem 11
-    # line is the list of lines that you need to parse and for which you need
-    # to build triggers
+    # My code ...
+    d_trigs = {}
+    l_trigs = []
+    for line in lines:
+        l = line.split(',')
+        if l[1] == 'TITLE' and d_trigs.get(l[0]) is None:
+            d_trigs[l[0]] = TitleTrigger(l[2])
+        elif l[1] == 'DESCRIPTION' and d_trigs.get(l[0]) is None:
+            d_trigs[l[0]] = DescriptionTrigger(l[2])
+        elif l[1] == 'BEFORE' and d_trigs.get(l[0]) is None:
+            d_trigs[l[0]] = BeforeTrigger(l[2]) 
+        elif l[1] == 'AFTER' and d_trigs.get(l[0]) is None:
+            d_trigs[l[0]] = AfterTrigger(l[2]) 
+        elif l[1] == 'NOT' and d_trigs.get(l[0]) is None and isinstance(d_trigs.get(l[2]), Trigger):
+            d_trigs[l[0]] = NotTrigger(d_trigs.pop(l[2]))
+        elif l[1] == 'AND' and d_trigs.get(l[0]) is None and isinstance( d_trigs.get(l[2]), Trigger) and isinstance(d_trigs.get(l[3]),Trigger):
+            d_trigs[l[0]] = AndTrigger(d_trigs.pop(l[2]), d_trigs.pop(l[3]))
+        elif l[1] == 'OR' and d_trigs.get(l[0]) is None and isinstance(d_trigs.get(l[2]), Trigger) and isinstance(d_trigs.get(l[3]),Trigger):
+            d_trigs[l[0]] = OrTrigger(d_trigs.pop(l[2]), d_trigs.pop(l[3]))
+        elif l[0] == 'ADD':
+            for t in l[1:]:
+                l_trigs.append(d_trigs.get(t))
+        else:
+            print('Line was not processed:', line)
 
-    print(lines) # for now, print it so you see what it contains!
-
-
+    return l_trigs
 
 SLEEPTIME = 120 #seconds -- how often we poll
-
 def main_thread(master):
     # A sample trigger list - you might need to change the phrases to correspond
     # to what is currently in the news
@@ -269,7 +290,7 @@ def main_thread(master):
 
         # Problem 11
         # TODO: After implementing read_trigger_config, uncomment this line 
-        # triggerlist = read_trigger_config('triggers.txt')
+        triggerlist = read_trigger_config('triggers.txt')
         
         # HELPER CODE - you don't need to understand this!
         # Draws the popup window that displays the filtered stories
@@ -279,7 +300,7 @@ def main_thread(master):
         scrollbar = Scrollbar(master)
         scrollbar.pack(side=RIGHT,fill=Y)
 
-        t = "Google & Yahoo Top News"
+        t = "Top News"
         title = StringVar()
         title.set(t)
         ttl = Label(master, textvariable=title, font=("Helvetica", 18))
@@ -326,41 +347,25 @@ if __name__ == '__main__':
     t = threading.Thread(target=main_thread, args=(root,))
     t.start()
     root.mainloop()
-#    stories = process("http://news.google.com/news?output=rss")  
-#    for story in stories:
-#       print(get_text(story))
 
-#    time = '3 Oct 2019 17:00:00'
-#    time = time.split()
-#    time[3:5] = time[3].split(':')
-#    time[1] = month_string_to_int(time[1])
-#    int_time = []
-#    for t in time:
-#        int_time.append(int(t))
-#    time = int_time
-#    d = datetime(time[3],time[1] , time[0], time[3], time[4], time[5])
-#    print(d)
+#    nums = [1, 2, 3, 4]
+#    lets = ['a', 'b', 'c', 'd']
+#    for n in nums:
+#        for l in lets:
+#            print(n, l)
 
-#    print(time[2], time[1], time[0], time[3])
-#    print(month_string_to_int(time[1]))
-#    d = datetime(int(time[2]), month_string_to_int(time[1]), int(time[0]), time[3])
-#    print(d)
-#    def get_text(story, mode =='text'):
-#        """
-#        Returns all text from story and returns it as a single all lower-case single string
-#        """
-#        text = ''
-#        if story.get_description is not None and (mode == 'text' or mode == 'description'):
-#            text += story.get_description() + '\n' 
-#        if story.get_title is not None:
-#            text += story.get_title() + '\n' 
-#
-#        # remove punctuation
-#        for c in string.punctuation: 
-#            text = text.replace(c,'')
-#
-#        # remove multiple spaces
-#        text = ' '.join(text.split())
-#        
-#        return text.lower()
-#
+#    s = 't1,TITLE,election'#
+#    s = s.split(',')
+#    print(isinstance(s[2], str))
+
+#    d = {'a':1, 'b':2, 'c':3}
+#    print(d.get('a'))
+#    print(d.get('b'))
+#    print(d.get('c'))
+#    print(d.get('d'))
+#    
+#    print(d.get('d') is None)
+#    print(d.get('d') == None)
+
+#    t1 = TitleTrigger('bobby')
+#    print(str(t1))

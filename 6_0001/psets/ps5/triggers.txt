@@ -3,22 +3,47 @@
 // stories!
 
 // title trigger named t1
-t1,TITLE,election
+t1,TITLE,world series
 
 // description trigger named t2
-t2,DESCRIPTION,Trump
+t2,DESCRIPTION,world series
+
+// description trigger named t2
+t3,DESCRIPTION,astros
 
 // description trigger named t3
-t3,DESCRIPTION,Clinton
+t4,DESCRIPTION,nationals
 
-// after trigger named t4
-t4,AFTER,3 Oct 2016 17:00:10
+t5,DESCRIPTION,AI
 
-// composite trigger named t4
-t5,AND,t2,t3
+t6,DESCRIPTION,Trump
+t7,TITLE,Trump
+t8,OR,t6,t7
 
-// composite trigger named t4
-t6,AND,t1,t4
+t9,DESCRIPTION, AI
 
-// the trigger list contains t1 and t4
-ADD,t5,t6
+t10,TITLE,Space
+t11,DESCRIPTION,Space
+t12,TITLE,SpaceX
+t13,DESCRIPTION,SpaceX
+t14,TITLE,Lockheed Martin
+t15,TITLE,Elon Musk
+t16,OR,t10,t11,t12,t13,t14,t15
+
+// the trigger list contains t1..t4
+ADD,t1,t2,t3,t4,t5,t8,t9,t16
+
+//// description trigger named t3
+//t3,DESCRIPTION,Houston
+//
+//// after trigger named t4
+//t4,AFTER,3 Oct 2016 17:00:10
+//
+//// composite trigger named t4
+//t5,AND,t2,t3
+//
+//// composite trigger named t5
+//t6,AND,t1,t4
+//
+//// the trigger list contains t5 and t5
+//ADD,t5,t6
