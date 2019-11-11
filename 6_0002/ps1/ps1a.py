@@ -59,23 +59,19 @@ def greedy_cow_transport(cows,limit=10):
   transported on a particular trip and the overall list containing all the
   trips
   """
-  cows_cpy = cows.copy()
+  cows_cpy = sorted(cows.copy(), key=cows.get, reverse=True)
+  for cow in cows:
+    if cows[cow] > limit:
+      cows_cpy.remove(cow)
   L = []
   while len(cows_cpy):
-    # TODO: catch the fat cow that is greater than limit by itself
     payload = 0
     cows_aboard = []
-    while payload < limit:
-      best_cow = None
-      for cow in cows_cpy:
-        cow_weight = cows_cpy.get(cow)
-        if cow_weight > best_cow_weight and cow_weight <= limit-payload:
-          best_cow = cow
-      if best_cow is None:
-        break
-      cows_aboard.append(best_cow)
-      payload += cows_cpy.pop(best_cow)
-
+    for cow in cows_cpy[:]:
+      if cows[cow] + payload <= limit:
+        cows_aboard.append(cow)
+        payload += cows.get(cow)
+        cows_cpy.remove(cow)
     L.append(cows_aboard[:])
 
   return L
@@ -102,8 +98,18 @@ def brute_force_cow_transport(cows,limit=10):
   transported on a particular trip and the overall list containing all the
   trips
   """
-  # TODO: Your code here
-  pass
+  cows_cpy = cows.copy()
+  for cow in cows:
+    if cows_cpy.get(cow) > limit:
+      del cows_cpy[cow]
+  partitions = get_partitions(cows_cpy)
+  for partition in partitions:
+    print(partition)
+    for L in partition:
+      for e in L:
+        Sum += cows.get(e)
+      print(Sum)
+
       
 # Problem 4
 def compare_cow_transport_algorithms():
@@ -123,5 +129,15 @@ def compare_cow_transport_algorithms():
   pass
 
 if __name__ == '__main__':
-  cows = load_cows('ps1_cow_data.txt')
-  greedy_cow_transport(cows)
+  cows = {'A':1, 'B':2, 'C':3}
+  brute_force_cow_transport(cows)
+
+  #  cows = {'A':1, 'B':2, 'C':3}
+  #  partitions = get_partitions(cows)
+  #  for partition in partitions:
+  #    print(partition)
+  #    print(len(partition))
+  #    for L in partition:
+  #      for cow in L:
+  #        print(cow)
+  #      print('--')
