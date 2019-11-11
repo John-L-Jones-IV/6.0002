@@ -55,3 +55,17 @@ class TestCows(unittest.TestCase):
     L =[['A'],['B']]
     self.assertEqual(greedy_cow_transport(cows,limit = 12), L)
     self.assertEqual(cows,cows_cpy)
+  
+  def test_brute_force_cow_transport(self):
+    cows = {'A':5, 'B':5, 'C':7}
+    cows_cpy = cows.copy()
+    L = [['C'],['A','B']]
+    self.assertEqual(greedy_cow_transport(cows), L)
+    self.assertEqual(cows,cows_cpy)
+
+    cows = {'A':8, 'B':3, 'C':7}
+    cows_cpy = cows.copy()
+    L = [['A'],['C','B']]
+    self.assertEqual(greedy_cow_transport(cows), L)
+    self.assertEqual(cows,cows_cpy)
+

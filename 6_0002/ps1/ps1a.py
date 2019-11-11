@@ -99,18 +99,28 @@ def brute_force_cow_transport(cows,limit=10):
   trips
   """
   cows_cpy = cows.copy()
-  for cow in cows:
-    if cows_cpy.get(cow) > limit:
-      del cows_cpy[cow]
   partitions = get_partitions(cows_cpy)
+  valid_partitions = []
   for partition in partitions:
-    print(partition)
+    valid_partition = True
     for L in partition:
+      payload = 0
       for e in L:
-        Sum += cows.get(e)
-      print(Sum)
+        payload += cows.get(e)
+      if payload > limit:
+        valid_partition = False
+    if valid_partition:
+      valid_partitions.append(partition)
+  
+  best_partition = []
+  max_len = float('inf')
+  for partition in valid_partitions:
+    if len(partition) < max_len:
+      max_len = len(partition)
+      best_partition = partition
 
-      
+  return best_partition
+
 # Problem 4
 def compare_cow_transport_algorithms():
   """
@@ -125,13 +135,26 @@ def compare_cow_transport_algorithms():
   Returns:
   Does not return anything.
   """
-  # TODO: Your code here
-  pass
+  cows = load_cows('ps1_cow_data.txt')
+  start_time = time.time()
+  L = greedy_cow_transport(cows)
+  end_time = time.time()
+  print('greedy_cow_transport: \t\t length = ', len(L), '\t\ttime = ', end_time - start_time)
+  print(L)
+
+  start_time = time.time()
+  L = brute_force_cow_transport(cows)
+  end_time = time.time()
+  print('brute_force_cow_transport: \t length = ', len(L), '\t\ttime = ', end_time - start_time)
+  print(L)
 
 if __name__ == '__main__':
-  cows = {'A':1, 'B':2, 'C':3}
-  brute_force_cow_transport(cows)
-
+  compare_cow_transport_algorithms()
+  #  cows = {'A':1, 'B':2, 'C':3, 'D':4}
+  #  partitions = get_partitions(cows)
+  #  for part in partitions:
+  #    print(part)
+  #
   #  cows = {'A':1, 'B':2, 'C':3}
   #  partitions = get_partitions(cows)
   #  for partition in partitions:
