@@ -5,6 +5,9 @@ Introduction_to_Computation_and_Programming_Using_Python_John_V_Guttag.pdf
 6_0001/psets/ps0/*
 6_0001/psets/ps2/__pycache__/
 6_0001/psets/ps3/__pycache__/
+6_0001/psets/ps5/exceptions_tutorial.py
+6_0001/psets/ps5/lect10-note.py
+6_0001/psets/ps5/lect12-notes.py
 *.swp
 *.log
 *.pyc
