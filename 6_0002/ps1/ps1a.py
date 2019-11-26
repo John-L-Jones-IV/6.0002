@@ -59,7 +59,7 @@ def greedy_cow_transport(cows,limit=10):
   transported on a particular trip and the overall list containing all the
   trips
   """
-  cows_cpy = sorted(cows.copy(), key=cows.get, reverse=True)
+  cows_cpy = sorted(cows.copy(),key=cows.get,reverse=True)
   for cow in cows:
     if cows[cow] > limit:
       cows_cpy.remove(cow)
@@ -139,28 +139,16 @@ def compare_cow_transport_algorithms():
   start_time = time.time()
   L = greedy_cow_transport(cows)
   end_time = time.time()
-  print('greedy_cow_transport: \t\t length = ', len(L), '\t\ttime = ', end_time - start_time)
+  print('greedy_cow_transport: \t\t length = ',len(L),'\t\ttime = ',end_time-start_time)
   print(L)
 
   start_time = time.time()
   L = brute_force_cow_transport(cows)
   end_time = time.time()
-  print('brute_force_cow_transport: \t length = ', len(L), '\t\ttime = ', end_time - start_time)
+  print('brute_force_cow_transport: \t length = ',len(L),'\t\ttime = ',end_time - start_time)
   print(L)
 
 if __name__ == '__main__':
   compare_cow_transport_algorithms()
-  #  cows = {'A':1, 'B':2, 'C':3, 'D':4}
-  #  partitions = get_partitions(cows)
-  #  for part in partitions:
-  #    print(part)
-  #
-  #  cows = {'A':1, 'B':2, 'C':3}
-  #  partitions = get_partitions(cows)
-  #  for partition in partitions:
-  #    print(partition)
-  #    print(len(partition))
-  #    for L in partition:
-  #      for cow in L:
-  #        print(cow)
-  #      print('--')
+#  d = {'a':1, 'b':2, 'c':3}
+#  print(sorted(d,key=d.get,reverse=True))

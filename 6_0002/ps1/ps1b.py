@@ -1,6 +1,7 @@
+#!/usr/bin/env python3
 ###########################
 # 6.0002 Problem Set 1b: Space Change
-# Name:
+# Name: <John-L-Jones-IV>
 # Collaborators:
 # Time:
 # Author: charz, cdenise
@@ -22,8 +23,7 @@ def dp_make_weight(egg_weights, target_weight, memo = {}):
     
     Returns: int, smallest number of eggs needed to make target weight
     """
-    # TODO: Your code here
-    pass
+    return 99
 
 # EXAMPLE TESTING CODE, feel free to add more if you'd like
 if __name__ == '__main__':
