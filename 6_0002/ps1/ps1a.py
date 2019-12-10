@@ -149,6 +149,6 @@ def compare_cow_transport_algorithms():
   print(L)
 
 if __name__ == '__main__':
-  compare_cow_transport_algorithms()
+#  compare_cow_transport_algorithms()
 #  d = {'a':1, 'b':2, 'c':3}
 #  print(sorted(d,key=d.get,reverse=True))

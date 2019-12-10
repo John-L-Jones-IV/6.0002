@@ -38,10 +38,12 @@ Since the list has been sorted, this is an $\mathcal{O}(n\log{}n)$ operation.
 The python \texttt{sorted} function's Timsort and 
 selecting cows operation dominate the run time,
 making \texttt{greedy\_cow\_transport} $\mathcal{O}(n\log{}n)$.
-In comparison,\texttt{brute\_force\_cow\_transport} must first create all permutations of the possible trips, 
+In comparison, \texttt{brute\_force\_cow\_transport} must first create all permutations of the possible trips, 
 $\mathcal{O}(n^{2})$.
 Then evaluate each of these trips, $\mathcal{O}(n^{2})$.
-This emphasizes Professor John Guttag's quote from Lecture 1, ``
+This emphasizes Professor John Guttag's quote from Lecture 1, ``many optimization problems are inherently exponential.
+What that means is there is no algorithm that provides an exact solution to this problem whose worst case running time
+is not exponential in the number of items."
 
 \section{}
 Does the greedy algorithm return the optimal solution? Why/why not? \\
@@ -49,7 +51,8 @@ Does the greedy algorithm return the optimal solution? Why/why not? \\
 The greedy algorithm \emph{does not} return the optimal solution.
 The nature of this ``knapsack'' problem can only be solved in $\mathcal{O}(n^{2})$.
 However, a reasonable solution can be solve in much less time.
-With \texttt{ps1\_cow\_data.txt} the solution is solved on the order of $1/1000$ of the time compared to brute force.
+With \texttt{ps1\_cow\_data.txt} and this test set the solution is solved on the order of $1/1000$ of the time of brute force
+algorithm.
 
 \section{}
 Does the brute force algorithm return the optimal solution? Why/why not? \\
@@ -57,6 +60,7 @@ Does the brute force algorithm return the optimal solution? Why/why not? \\
 Yes, the brute force algorithm does fine the optimal solution.
 All possible solutions are evaluation and the best is chosen. 
 However, this comes at a great cost to run-time speed.
-With \texttt{ps1\_cow\_data.txt} the solution is solved on the order of $1000$ of the time compared to the greedy algorithm. 
+With \texttt{ps1\_cow\_data.txt} and this test set the solution is solved on the order of $1000$ times slower
+than that of the greedy algorithm. 
 
 \end{document}
