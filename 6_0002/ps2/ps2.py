@@ -2,8 +2,8 @@
 # 6.0002 Problem Set 5
 # Graph optimization
 # Name: <John-L-Jones-IV>
-# Collaborators:
-# Time:
+# Collaborators: <tuhang102>
+# Time: ~5 hrs
 
 #
 # Finding shortest paths through MIT buildings
@@ -46,25 +46,25 @@ def load_map(map_filename):
         a Digraph representing the map
     """
     with open(map_filename) as f:
-      print("Loading map from file...")
-      read_data = f.read()
+        print("Loading map from file...")
+        read_data = f.read()
     f.close()
     read_data = read_data.split()
 
     g = Digraph()
     for i in range (0, len(read_data), 4):
-      node_source = Node(read_data[i])
-      node_destination = Node(read_data[i+1])
-      total_distance = read_data[i+2]
-      outside_distance = read_data[i+3]
-      edge = WeightedEdge(node_source, node_destination, total_distance, outside_distance)
-      # ensure nodes are in Digraph
-      if not g.has_node(node_source):
-        g.add_node(node_source)
-      if not g.has_node(node_destination):
-        g.add_node(node_destination)
-      # add edge to Digraph
-      g.add_edge(edge)
+        node_source = Node(read_data[i])
+        node_destination = Node(read_data[i+1])
+        total_distance = read_data[i+2]
+        outside_distance = read_data[i+3]
+        edge = WeightedEdge(node_source, node_destination, total_distance, outside_distance)
+        # ensure nodes are in Digraph
+        if not g.has_node(node_source):
+            g.add_node(node_source)
+        if not g.has_node(node_destination):
+            g.add_node(node_destination)
+        # add edge to Digraph
+        g.add_edge(edge)
 
     return g
     
@@ -124,27 +124,26 @@ def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist,
         max_dist_outdoors constraints, then return None.
     """
     if not digraph.has_node(start) or not digraph.has_node(start):
-      raise ValueError('Invalid node')
+        raise ValueError('Invalid node')
     path_cpy = deepcopy(path)
     path_cpy[0].append(start)
     if start == end:
-      return (path_cpy[0].copy(), path_cpy[1])
+        return (path_cpy[0].copy(), path_cpy[1])
     if path_cpy[1] > best_dist:
-      return None
+        return None
     start_total_dist = path_cpy[1]
     start_outdoor_dist = path_cpy[2]
     for edge in digraph.get_edges_for_node(start): 
-      if edge.get_destination() not in path_cpy[0]:
-        path_cpy[1] = start_total_dist + int(edge.get_total_distance())
-        path_cpy[2] = start_outdoor_dist + int(edge.get_outdoor_distance())
-#        print('path_cpy:\t', path_cpy, '\nedge:\t',edge,'\n')
-        if path_cpy[2] > max_dist_outdoors:
-          continue
-        new_path = get_best_path(digraph, edge.get_destination(), end, deepcopy(path_cpy),\
-            max_dist_outdoors, best_dist, deepcopy(best_path))
-        if new_path is not None and new_path[1] < best_dist:
-            best_path = new_path[0].copy()
-            best_dist = new_path[1]
+        if edge.get_destination() not in path_cpy[0]:
+            path_cpy[1] = start_total_dist + int(edge.get_total_distance())
+            path_cpy[2] = start_outdoor_dist + int(edge.get_outdoor_distance())
+            if path_cpy[2] > max_dist_outdoors:
+                continue
+            new_path = get_best_path(digraph, edge.get_destination(), end, deepcopy(path_cpy),\
+                max_dist_outdoors, best_dist, deepcopy(best_path))
+            if new_path is not None and new_path[1] < best_dist:
+                  best_path = new_path[0].copy()
+                  best_dist = new_path[1]
 
     return (best_path.copy(), best_dist)
 
@@ -271,12 +270,20 @@ class Ps2Test(unittest.TestCase):
     def test_impossible_path2(self):
         self._test_impossible_path('10', '32', total_dist=100)
 
+    def test1(self):
+        self._test_path(expectedPath=['1','3'])
+
+    def test2(self):
+        self._test_path(expectedPath=['1','5','7'])
+
+    def test3(self):
+        self._test_path(expectedPath=['50','14','2'])
 
 if __name__ == "__main__":
-    digraph =  load_map('test_load_map.txt')
-    start = Node('a')
-    end = Node('c')
-    max_total_dist = 90
-    max_dist_outdoors = 60
-    print(directed_dfs(digraph, start, end, max_total_dist, max_dist_outdoors))
+#    digraph =  load_map('test_load_map.txt')
+#    start = Node('a')
+#    end = Node('c')
+#    max_total_dist = 90
+#    max_dist_outdoors = 60
+#    print(directed_dfs(digraph, start, end, max_total_dist, max_dist_outdoors))
     unittest.main()
