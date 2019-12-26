@@ -273,10 +273,10 @@ class Ps2Test(unittest.TestCase):
 
 
 if __name__ == "__main__":
-  #  digraph =  load_map('test_load_map.txt')
-  #  start = Node('a')
-  #  end = Node('c')
-  #  max_total_dist = 90
-  #  max_dist_outdoors = 60
-  #  print(directed_dfs(digraph, start, end, max_total_dist, max_dist_outdoors))
-  unittest.main()
+    digraph =  load_map('test_load_map.txt')
+    start = Node('a')
+    end = Node('c')
+    max_total_dist = 90
+    max_dist_outdoors = 60
+    print(directed_dfs(digraph, start, end, max_total_dist, max_dist_outdoors))
+    unittest.main()
