@@ -126,7 +126,7 @@ def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist,
     if not digraph.has_node(start) or not digraph.has_node(start):
         raise ValueError('Invalid node')
     path_cpy = deepcopy(path)
-    path_cpy[0].append(start)
+    path_cpy[0].append(start.get_name())
     if start == end:
         return (path_cpy[0].copy(), path_cpy[1])
     if path_cpy[1] > best_dist:
@@ -134,7 +134,7 @@ def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist,
     start_total_dist = path_cpy[1]
     start_outdoor_dist = path_cpy[2]
     for edge in digraph.get_edges_for_node(start): 
-        if edge.get_destination() not in path_cpy[0]:
+        if edge.get_destination().get_name() not in path_cpy[0]:
             path_cpy[1] = start_total_dist + int(edge.get_total_distance())
             path_cpy[2] = start_outdoor_dist + int(edge.get_outdoor_distance())
             if path_cpy[2] > max_dist_outdoors:
@@ -182,10 +182,7 @@ def directed_dfs(digraph, start, end, max_total_dist, max_dist_outdoors):
       raise ValueError('No path satisfies max_total_dist')
     if path[1] is None:
       raise ValueError('No path satisfies max_total_dist and max_dist_outdoors')
-    out = []
-    for e in path[0]:
-      out.append(str(e))
-    return out
+    return path[0]
 
 # ================================================================
 # Begin tests -- you do not need to modify anything below this line
@@ -280,10 +277,10 @@ class Ps2Test(unittest.TestCase):
         self._test_path(expectedPath=['50','14','2'])
 
 if __name__ == "__main__":
-#    digraph =  load_map('test_load_map.txt')
-#    start = Node('a')
-#    end = Node('c')
-#    max_total_dist = 90
-#    max_dist_outdoors = 60
-#    print(directed_dfs(digraph, start, end, max_total_dist, max_dist_outdoors))
+  #    digraph =  load_map('test_load_map.txt')
+  #    start = Node('a')
+  #    end = Node('c')
+  #    max_total_dist = 90
+  #    max_dist_outdoors = 60
+  #    print(directed_dfs(digraph, start, end, max_total_dist, max_dist_outdoors))
     unittest.main()
