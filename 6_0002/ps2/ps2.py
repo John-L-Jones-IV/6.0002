@@ -129,19 +129,17 @@ def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist,
     path_cpy[0].append(start.get_name())
     if start == end:
         return (path_cpy[0].copy(), path_cpy[1])
-    if path_cpy[1] > best_dist:
-        return None
     start_total_dist = path_cpy[1]
     start_outdoor_dist = path_cpy[2]
     for edge in digraph.get_edges_for_node(start): 
         if edge.get_destination().get_name() not in path_cpy[0]:
             path_cpy[1] = start_total_dist + int(edge.get_total_distance())
             path_cpy[2] = start_outdoor_dist + int(edge.get_outdoor_distance())
-            if path_cpy[2] > max_dist_outdoors:
+            if path_cpy[2] > max_dist_outdoors or path_cpy[1] > best_dist:
                 continue
             new_path = get_best_path(digraph, edge.get_destination(), end, deepcopy(path_cpy),\
-                max_dist_outdoors, best_dist, deepcopy(best_path))
-            if new_path is not None and new_path[1] < best_dist:
+                max_dist_outdoors, best_dist, best_path.copy())
+            if new_path[1] < best_dist:
                   best_path = new_path[0].copy()
                   best_dist = new_path[1]
 
