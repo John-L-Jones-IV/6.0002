@@ -90,6 +90,8 @@ class RectangularRoom(object):
         if not width > 0: raise ValueError
         if not height > 0: raise ValueError
         if not dirt_amount >= 0: raise ValueError
+        self.width = width
+        self.height = height
         tiles = []
         for i in range(width):
           tiles.append([])
@@ -110,7 +112,7 @@ class RectangularRoom(object):
         Note: The amount of dirt on each tile should be NON-NEGATIVE.
               If the capacity exceeds the amount of dirt on the tile, mark it as 0.
         """
-        x, y = pos.get_x(), pos.get_y()
+        x, y = int(pos.get_x()//1), int(pos.get_y()//1)
         self.tiles[x][y] -= capacity
         if self.tiles[x][y] < 0:
           self.tiles[x][y] = 0
@@ -137,7 +139,7 @@ class RectangularRoom(object):
         """
         num_clean_tiles = 0
         for i in range(self.width):
-          for j in rnage(self.height):
+          for j in range(self.height):
             if self.is_tile_cleaned(i,j):
               num_clean_tiles += 1
         return num_clean_tiles
@@ -149,9 +151,10 @@ class RectangularRoom(object):
         pos: a Position object.
         Returns: True if pos is in the room, False otherwise.
         """
-        if pos.get_x() >= self.width:
+        x, y = pos.get_x(), pos.get_y()
+        if x >= self.width or x < 0:
           return False
-        if pos.get_y() >= self.height:
+        if y >= self.height or y < 0:
           return False
         return True
         
