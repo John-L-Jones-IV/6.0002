@@ -2,14 +2,15 @@
 # 6.0002 Problem Set 5
 # Graph optimization
 # Name: <John-L-Jones-IV>
-# Collaborators:
-# Time:
+# Collaborators: <tuhang102>
+# Time: ~5 hrs
 
 #
 # Finding shortest paths through MIT buildings
 #
 import unittest
 from graph import Digraph, Node, WeightedEdge
+from copy import deepcopy
 
 #
 # Problem 2: Building up the Campus Map
@@ -45,25 +46,25 @@ def load_map(map_filename):
         a Digraph representing the map
     """
     with open(map_filename) as f:
-      print("Loading map from file...")
-      read_data = f.read()
+        print("Loading map from file...")
+        read_data = f.read()
     f.close()
     read_data = read_data.split()
 
     g = Digraph()
     for i in range (0, len(read_data), 4):
-      node_source = Node(read_data[i])
-      node_destination = Node(read_data[i+1])
-      total_distance = read_data[i+2]
-      outside_distance = read_data[i+3]
-      edge = WeightedEdge(node_source, node_destination, total_distance, outside_distance)
-      # ensure nodes are in Digraph
-      if not g.has_node(node_source):
-        g.add_node(node_source)
-      if not g.has_node(node_destination):
-        g.add_node(node_destination)
-      # add edge to Digraph
-      g.add_edge(edge)
+        node_source = Node(read_data[i])
+        node_destination = Node(read_data[i+1])
+        total_distance = read_data[i+2]
+        outside_distance = read_data[i+3]
+        edge = WeightedEdge(node_source, node_destination, total_distance, outside_distance)
+        # ensure nodes are in Digraph
+        if not g.has_node(node_source):
+            g.add_node(node_source)
+        if not g.has_node(node_destination):
+            g.add_node(node_destination)
+        # add edge to Digraph
+        g.add_edge(edge)
 
     return g
     
@@ -79,7 +80,12 @@ def load_map(map_filename):
 #
 # What is the objective function for this problem? What are the constraints?
 #
-# Answer: 
+# Answer: obtain shortest total distance between two nodes by 
+# traversing edges, while not exceeding the outdoor distance limit
+# Learning Experience: the list method .copy() does create a element by element copy of the list
+# however; if one element of the list is a refernce object, such as another list that reference object is 
+# only a shallow copy. Therfore the deepcopy() method from the copy library is used to copy all elements of the
+# path list.
 #
 
 # Problem 3b: Implement get_best_path
@@ -117,10 +123,27 @@ def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist,
         If there exists no path that satisfies max_total_dist and
         max_dist_outdoors constraints, then return None.
     """
-    shortest_distance = 2**32 # basically inf
-    for edge in get_edges_for_node(start):
-      print(edge)
+    if not digraph.has_node(start) or not digraph.has_node(start):
+        raise ValueError('Invalid node')
+    path_cpy = deepcopy(path)
+    path_cpy[0].append(start.get_name())
+    if start == end:
+        return (path_cpy[0].copy(), path_cpy[1])
+    start_total_dist = path_cpy[1]
+    start_outdoor_dist = path_cpy[2]
+    for edge in digraph.get_edges_for_node(start): 
+        if edge.get_destination().get_name() not in path_cpy[0]:
+            path_cpy[1] = start_total_dist + int(edge.get_total_distance())
+            path_cpy[2] = start_outdoor_dist + int(edge.get_outdoor_distance())
+            if path_cpy[2] > max_dist_outdoors or path_cpy[1] > best_dist:
+                continue
+            new_path = get_best_path(digraph, edge.get_destination(), end, deepcopy(path_cpy),\
+                max_dist_outdoors, best_dist, best_path.copy())
+            if new_path[1] < best_dist:
+                  best_path = new_path[0].copy()
+                  best_dist = new_path[1]
 
+    return (best_path.copy(), best_dist)
 
 # Problem 3c: Implement directed_dfs
 def directed_dfs(digraph, start, end, max_total_dist, max_dist_outdoors):
@@ -151,9 +174,13 @@ def directed_dfs(digraph, start, end, max_total_dist, max_dist_outdoors):
         If there exists no path that satisfies max_total_dist and
         max_dist_outdoors constraints, then raises a ValueError.
     """
-    # TODO
-    pass
-
+    LARGE = 2**30
+    path = get_best_path(digraph, Node(start), Node(end), [[],0,0], max_dist_outdoors, LARGE, [])
+    if path[1] > max_total_dist:
+      raise ValueError('No path satisfies max_total_dist')
+    if path[1] is None:
+      raise ValueError('No path satisfies max_total_dist and max_dist_outdoors')
+    return path[0]
 
 # ================================================================
 # Begin tests -- you do not need to modify anything below this line
@@ -238,12 +265,20 @@ class Ps2Test(unittest.TestCase):
     def test_impossible_path2(self):
         self._test_impossible_path('10', '32', total_dist=100)
 
+    def test1(self):
+        self._test_path(expectedPath=['1','3'])
+
+    def test2(self):
+        self._test_path(expectedPath=['1','5','7'])
+
+    def test3(self):
+        self._test_path(expectedPath=['50','14','2'])
 
 if __name__ == "__main__":
-  #  unittest.main()
-  g =  load_map('test_load_map.txt')
-  print(g)
-  start = 1
-  end = 2
-  get_best_path(g, start, end, path, max_dist_outdoors, best_dist, best_path)
-
+  #    digraph =  load_map('test_load_map.txt')
+  #    start = Node('a')
+  #    end = Node('c')
+  #    max_total_dist = 90
+  #    max_dist_outdoors = 60
+  #    print(directed_dfs(digraph, start, end, max_total_dist, max_dist_outdoors))
+    unittest.main()

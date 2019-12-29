@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 # 6.0002 Problem Set 5
 # Graph optimization
-# Name:
-# Collaborators:
-# Time:
-
+# Name: <John-L-Jones-IV>
+# Collaborators: <tuthang102>
+# Time: ~3 hrs
 import unittest
 
 #
@@ -56,20 +55,20 @@ class Edge(object):
 
 class WeightedEdge(Edge):
     def __init__(self, src, dest, total_distance, outdoor_distance):
-      self.src = src
-      self.dest = dest
-      self.total_distance = total_distance
-      self.outdoor_distance = outdoor_distance
+        self.src = src
+        self.dest = dest
+        self.total_distance = total_distance
+        self.outdoor_distance = outdoor_distance
 
     def get_total_distance(self):
-      return self.total_distance
+        return self.total_distance
 
     def get_outdoor_distance(self):
-      return self.outdoor_distance
+        return self.outdoor_distance
 
     def __str__(self):
-      return '{}->{} ({}, {})'.format(self.src, self.dest,\
-          self.total_distance, self.outdoor_distance)
+        return '{}->{} ({}, {})'.format(self.src, self.dest,\
+            self.total_distance, self.outdoor_distance)
 
 class Digraph(object):
     """Represents a directed graph of Node and Edge objects"""
@@ -95,9 +94,9 @@ class Digraph(object):
         """Adds a Node object to the Digraph. Raises a ValueError if it is
         already in the graph."""
         if self.has_node(node):
-          raise ValueError('node '+str(node)+' already in Digraph object')
+            raise ValueError('node '+str(node)+' already in Digraph object')
         else:
-          self.nodes.add(node)
+            self.nodes.add(node)
 
     def add_edge(self, edge):
         """Adds an Edge or WeightedEdge instance to the Digraph. Raises a
@@ -106,12 +105,12 @@ class Digraph(object):
         edge_src = edge.get_source()
         edge_dest = edge.get_destination()
         if self.has_node(edge_src) and self.has_node(edge_dest):
-          if self.edges.get(edge_src) == None:
-            self.edges[edge_src] = {edge}
-          else:
-            self.edges[edge_src].add(edge)
+            if self.edges.get(edge_src) == None:
+                self.edges[edge_src] = {edge}
+            else:
+                self.edges[edge_src].add(edge)
         else:
-          raise ValueError('All nodes associated with edge must be in graph')
+            raise ValueError('All nodes associated with edge must be in graph')
 
 # ================================================================
 # Begin tests -- you do not need to modify anything below this line
@@ -169,4 +168,8 @@ class TestGraph(unittest.TestCase):
 
 
 if __name__ == "__main__":
-  unittest.main()
+#    na = Node('a')
+#    nb = Node('b')
+#    e1 = WeightedEdge(na, nb, 10, 5)
+#    print(e1)
+    unittest.main()
