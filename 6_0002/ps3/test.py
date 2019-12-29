@@ -9,8 +9,10 @@ import math, random, ps3_visualize, pylab
 from ps3_verify_movement27 import test_robot_movement
 
 class Position(object):
-    r"""'\n    A Position represents a location in a two-dimensional room, where\n    coordinates are given by floats (x, y).\n    '"""
-
+    """
+    A Position represents a location in a two-dimensional room, where
+    coordinates are given by floats (x, y).
+    """
     def __init__(self, x, y):
         """
         Initializes a position with coordinates (x, y).
@@ -49,7 +51,14 @@ class Position(object):
 
 
 class RectangularRoom(object):
-    r"""'\n    A RectangularRoom represents a rectangular region containing clean or dirty\n    tiles.\n\n    A room has a width and a height and contains (width * height) tiles. Each tile\n    has some fixed amount of dirt. The tile is considered clean only when the amount\n    of dirt on this tile is 0.\n    '"""
+    """
+    A RectangularRoom represents a rectangular region containing clean or dirty
+    tiles.
+    
+    A room has a width and a height and contains (width * height) tiles. Each tile
+    has some fixed amount of dirt. The tile is considered clean only when the amount
+    of dirt on this tile is 0.
+    """
 
     def __init__(self, width, height, dirt_amount):
         """
@@ -165,7 +174,15 @@ class RectangularRoom(object):
 
 
 class Robot(object):
-    r"""'\n    Represents a robot cleaning a particular room.\n\n    At all times, the robot has a particular position and direction in the room.\n    The robot also has a fixed speed and a fixed cleaning capacity.\n\n    Subclasses of Robot should provide movement strategies by implementing\n    update_position_and_clean, which simulates a single time-step.\n    '"""
+    """
+    Represents a robot cleaning a particular room.
+    
+    At all times, the robot has a particular position and direction in the room.
+    The robot also has a fixed speed and a fixed cleaning capacity.
+    
+    Subclasses of Robot should provide movement strategies by implementing
+    update_position_and_clean, which simulates a single time-step.
+    """
 
     def __init__(self, room, speed, capacity):
         """
@@ -228,7 +245,9 @@ class Robot(object):
 
 
 class EmptyRoom(RectangularRoom):
-    r"""'\n    An EmptyRoom represents a RectangularRoom with no furniture.\n    '"""
+    """
+    An EmptyRoom represents a RectangularRoom with no furniture.
+    """
 
     def get_num_tiles(self):
         """
@@ -252,7 +271,10 @@ class EmptyRoom(RectangularRoom):
 
 
 class FurnishedRoom(RectangularRoom):
-    r"""'\n    A FurnishedRoom represents a RectangularRoom with a rectangular piece of \n    furniture. The robot should not be able to land on these furniture tiles.\n    '"""
+    """
+    A FurnishedRoom represents a RectangularRoom with a rectangular piece of 
+    furniture. The robot should not be able to land on these furniture tiles.
+    """
 
     def __init__(self, width, height, dirt_amount):
         """ 
@@ -325,8 +347,13 @@ class FurnishedRoom(RectangularRoom):
 
 
 class StandardRobot(Robot):
-    r"""'\n    A StandardRobot is a Robot with the standard movement strategy.\n\n    At each time-step, a StandardRobot attempts to move in its current\n    direction; when it would hit a wall or furtniture, it *instead*\n    chooses a new direction randomly.\n    '"""
-
+    """
+    A StandardRobot is a Robot with the standard movement strategy.
+    
+    At each time-step, a StandardRobot attempts to move in its current
+    direction; when it would hit a wall or furtniture, it *instead*
+    chooses a new direction randomly.
+    """
     def update_position_and_clean(self):
         """
         Simulate the raise passage of a single time-step.
@@ -343,7 +370,11 @@ class StandardRobot(Robot):
 
 
 class FaultyRobot(Robot):
-    r"""'\n    A FaultyRobot is a robot that will not the tile it moves to and\n    pick a new, random direction for itself with probability p rather\n    than simply cleaning the tile it moves to.\n    '"""
+    """
+    A FaultyRobot is a robot that will not the tile it moves to and
+    pick a new, random direction for itself with probability p rather
+    than simply cleaning the tile it moves to.
+    """
     p = 0.15
 
     @staticmethod
@@ -465,3 +496,6 @@ def show_plot_room_shape(title, x_label, y_label):
     pylab.ylabel(y_label)
     pylab.show()
 # okay decompiling test.pyc
+
+if __name__ == '__main__':
+  print(Position(1,2))
