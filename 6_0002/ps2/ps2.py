@@ -117,8 +117,9 @@ def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist,
         If there exists no path that satisfies max_total_dist and
         max_dist_outdoors constraints, then return None.
     """
-    # TODO
-    pass
+    shortest_distance = 2**32 # basically inf
+    for edge in get_edges_for_node(start):
+      print(edge)
 
 
 # Problem 3c: Implement directed_dfs
@@ -239,6 +240,10 @@ class Ps2Test(unittest.TestCase):
 
 
 if __name__ == "__main__":
+  #  unittest.main()
   g =  load_map('test_load_map.txt')
   print(g)
-#  unittest.main()
+  start = 1
+  end = 2
+  get_best_path(g, start, end, path, max_dist_outdoors, best_dist, best_path)
+

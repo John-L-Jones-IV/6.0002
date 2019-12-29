@@ -169,8 +169,4 @@ class TestGraph(unittest.TestCase):
 
 
 if __name__ == "__main__":
-  #  na = Node('a')
-  #  nb = Node('b')
-  #  e1 = WeightedEdge(na, nb, 10, 5)
-  #  print(e1)
   unittest.main()
