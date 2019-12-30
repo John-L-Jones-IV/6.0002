@@ -41,7 +41,12 @@ class Position(object):
         """
         old_x, old_y = self.get_x(), self.get_y()
         delta_y = speed * math.cos(math.radians(angle))
+        
+        # Compute the change in position
+        delta_y = speed * math.cos(math.radians(angle))
         delta_x = speed * math.sin(math.radians(angle))
+        
+        # Add that to the existing position
         new_x = old_x + delta_x
         new_y = old_y + delta_y
         return Position(new_x, new_y)

@@ -11,8 +11,6 @@ import random
 import ps3_visualize
 import pylab
 
-from copy import deepcopy
-
 # For python 2.7:
 from ps3_verify_movement27 import test_robot_movement
 
@@ -92,12 +90,10 @@ class RectangularRoom(object):
         if not dirt_amount >= 0: raise ValueError
         self.width = width
         self.height = height
-        tiles = []
+        self.tiles = {}
         for i in range(width):
-          tiles.append([])
           for j in range(height):
-            tiles[i].append(dirt_amount)
-        self.tiles = deepcopy(tiles)
+            self.tiles[(i,j)] = dirt_amount
     
     def clean_tile_at_position(self, pos, capacity):
         """
