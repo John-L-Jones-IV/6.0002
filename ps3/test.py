@@ -40,7 +40,6 @@ class Position(object):
 		Returns: a Position object representing the new position.
 		"""
 		old_x, old_y = self.get_x(), self.get_y()
-		delta_y = speed * math.cos(math.radians(angle))
 		
 		# Compute the change in position
 		delta_y = speed * math.cos(math.radians(angle))
@@ -64,7 +63,6 @@ class RectangularRoom(object):
 	has some fixed amount of dirt. The tile is considered clean only when the amount
 	of dirt on this tile is 0.
 	"""
-
 	def __init__(self, width, height, dirt_amount):
 		"""
 		Initializes a rectangular room with the specified width, height, and 
@@ -188,7 +186,6 @@ class Robot(object):
 	Subclasses of Robot should provide movement strategies by implementing
 	update_position_and_clean, which simulates a single time-step.
 	"""
-
 	def __init__(self, room, speed, capacity):
 		"""
 		Initializes a Robot with the given speed and given cleaning capacity in the 

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # Problem Set 3: Simulating robots
 # Name: <John-L-Jones-IV>
 # Collaborators (discussion):
@@ -13,7 +12,6 @@ import pylab
 
 # For python 2.7:
 from ps3_verify_movement27 import test_robot_movement
-
 
 # === Provided class Position
 class Position(object):
@@ -142,7 +140,7 @@ class RectangularRoom(object):
 		Returns: True if pos is in the room, False otherwise.
 		"""
 		x, y = pos.get_x(), pos.get_y()
-		if x >= self.width or x < 0 or y >= self.height or y < 0:
+		if x >= self.width or y >= self.height or x < 0 or y < 0:
 			return False
 		return True
 		
@@ -207,7 +205,7 @@ class Robot(object):
 		"""
 		if speed <= 0 or capacity <= 0:
 			raise ValueError
-		self.pos = Position(random.uniform(0, room.width), random.uniform(0, room.height))
+		self.pos = room.get_random_position()
 		self.direction = random.uniform(0,360)
 		self.room = room
 		self.speed = speed
@@ -234,7 +232,7 @@ class Robot(object):
 		"""
 		if not isinstance(position, Position):
 			raise TypeError
-		return self.pos
+		self.pos = position
 
 	def set_robot_direction(self, direction):
 		"""
@@ -345,7 +343,7 @@ class FurnishedRoom(RectangularRoom):
 		
 		returns: True if pos is in the room and is unfurnished, False otherwise.
 		"""
-		return super().is_position_in_room(pos) and not self.is_position_furnished(pos)
+		return self.is_position_in_room(pos) and not self.is_position_furnished(pos)
 		
 	def get_num_tiles(self):
 		"""
@@ -357,10 +355,10 @@ class FurnishedRoom(RectangularRoom):
 		"""
 		Returns: a Position object; a valid random position (inside the room and not in a furnished area).
 		"""
-		rand_pos = Position(random.uniform(0, self.width), random.uniform(0, self.height))
-		while not self.is_position_valid(rand_pos):
+		while True:
 			rand_pos = Position(random.uniform(0, self.width), random.uniform(0, self.height))
-		return rand_pos 
+			if self.is_position_valid(rand_pos):
+				return rand_pos
 
 # === Problem 3
 class StandardRobot(Robot):
@@ -379,11 +377,13 @@ class StandardRobot(Robot):
 		rotate once to a random new direction, and stay stationary) and clean the dirt on the tile
 		by its given capacity. 
 		"""
-		raise NotImplementedError
-
-# Uncomment this line to see your implementation of StandardRobot in action!
-#test_robot_movement(StandardRobot, EmptyRoom)
-#test_robot_movement(StandardRobot, FurnishedRoom)
+		new_pos = self.pos.get_new_position(self.direction, self.speed)
+		if self.room.is_position_valid(new_pos):
+			self.set_robot_position(new_pos)
+			self.room.clean_tile_at_position(new_pos, self.capacity)
+		else:
+			self.set_robot_direction(random.uniform(0,360))
+			# NOTE: DO NOT clean current tile OR move to different tile
 
 # === Problem 4
 class FaultyRobot(Robot):
@@ -423,9 +423,13 @@ class FaultyRobot(Robot):
 		StandardRobot at this time-step (checking if it can move to a new position,
 		move there if it can, pick a new direction and stay stationary if it can't)
 		"""
-		raise NotImplementedError
-		
-	
+		new_pos = self.pos.get_new_position(self.direction, self.speed)
+		if self.gets_faulty() or not self.room.is_position_valid(new_pos):
+			self.set_robot_direction(random.uniform(0,360))
+		else:
+			self.set_robot_position(new_pos)
+			self.room.clean_tile_at_position(new_pos, self.capacity)
+			
 #test_robot_movement(FaultyRobot, EmptyRoom)
 
 # === Problem 5
@@ -519,8 +523,17 @@ def show_plot_room_shape(title, x_label, y_label):
 #show_plot_room_shape('Time to clean 80% of a 300-tile room for various room shapes','Aspect Ratio', 'Time / steps')
 
 if __name__ == '__main__':
-	r = RectangularRoom(2,4,50)
-	print(r.tiles)
-	p1 = Position(1,1)
-	r.clean_tile_at_position(p1,20)
-	print(r.tiles)
+	pass
+# FIXME: robot's cone of vision seems to face the wrong direciton...
+
+# Uncomment this line to see your implementation of StandardRobot in action!
+#	test_robot_movement(StandardRobot, EmptyRoom)
+#	test_robot_movement(StandardRobot, FurnishedRoom)
+
+	test_robot_movement(FaultyRobot, EmptyRoom)
+
+#	r = RectangularRoom(2,4,50)
+#	print(r.tiles)
+#	p1 = Position(1,1)
+#	r.clean_tile_at_position(p1,20)
+#	print(r.tiles)
