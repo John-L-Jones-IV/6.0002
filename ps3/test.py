@@ -500,6 +500,3 @@ def show_plot_room_shape(title, x_label, y_label):
 	pylab.ylabel(y_label)
 	pylab.show()
 # okay decompiling test.pyc
-
-if __name__ == '__main__':
-	print(Position(1,2))

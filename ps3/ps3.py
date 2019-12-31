@@ -4,14 +4,10 @@
 # Collaborators (discussion):
 # Time:
 
-import math
-import random
-
-import ps3_visualize
-import pylab
-
+import math, random, ps3_visualize, pylab
 # For python 2.7:
 from ps3_verify_movement27 import test_robot_movement
+from statistics import mean as avg
 
 # === Provided class Position
 class Position(object):
@@ -59,7 +55,6 @@ class Position(object):
 
 	def __str__(self):	
 		return "Position: " + str(math.floor(self.x)) + ", " + str(math.floor(self.y))
-
 
 # === Problem 1
 class RectangularRoom(object):
@@ -140,7 +135,7 @@ class RectangularRoom(object):
 		Returns: True if pos is in the room, False otherwise.
 		"""
 		x, y = pos.get_x(), pos.get_y()
-		if x >= self.width or y >= self.height or x < 0 or y < 0:
+		if x >= self.width or x < 0 or y >= self.height or y < 0:
 			return False
 		return True
 		
@@ -180,7 +175,6 @@ class RectangularRoom(object):
 		"""
 		# do not change -- implement in subclasses
 		raise NotImplementedError
-
 
 class Robot(object):
 	"""
@@ -385,7 +379,10 @@ class StandardRobot(Robot):
 			self.set_robot_direction(random.uniform(0,360))
 			# NOTE: DO NOT clean current tile OR move to different tile
 
-# === Problem 4
+# Uncomment to test
+#test_robot_movement(StandardRobot, EmptyRoom)
+#test_robot_movement(StandardRobot, FurnishedRoom)
+
 class FaultyRobot(Robot):
 	"""
 	A FaultyRobot is a robot that will not clean the tile it moves to and
@@ -430,11 +427,13 @@ class FaultyRobot(Robot):
 			self.set_robot_position(new_pos)
 			self.room.clean_tile_at_position(new_pos, self.capacity)
 			
+# Uncomment to test
 #test_robot_movement(FaultyRobot, EmptyRoom)
+#test_robot_movement(FaultyRobot, FurnishedRoom)
 
 # === Problem 5
-def run_simulation(num_robots, speed, capacity, width, height, dirt_amount, min_coverage, num_trials,
-			robot_type):
+def run_simulation(num_robots, speed, capacity, width, height, dirt_amount,
+		min_coverage, num_trials, robot_type):
 	"""
 	Runs num_trials trials of the simulation and returns the mean number of
 	time-steps needed to clean the fraction min_coverage of the room.
@@ -454,28 +453,45 @@ def run_simulation(num_robots, speed, capacity, width, height, dirt_amount, min_
 	robot_type: class of robot to be instantiated (e.g. StandardRobot or
 				FaultyRobot)
 	"""
-	raise NotImplementedError
+	trial_time = []
+	for trial in range(num_trials):
+#		anim = ps3_visualize.RobotVisualization(num_robots, width, height, False)
+		time_step = 0
+		room = EmptyRoom(width, height, dirt_amount)
+		robots = []
+		for j in range(num_robots): # create new robots
+			robots.append(robot_type(room, speed, capacity))
+		while True: 
+			for j in range(len(robots)): # for each bot
+				# TODO: avoid robot colisions
+				robots[j].update_position_and_clean()
+			current_coverage = room.get_num_cleaned_tiles() / room.get_num_tiles()
+			if current_coverage >= min_coverage:
+				break
+#			anim.update(room, robots)
+			time_step += 1
+		trial_time.append(time_step)
+#		anim.done()
+	return avg(trial_time)
 
-
-# print ('avg time steps: ' + str(run_simulation(1, 1.0, 1, 5, 5, 3, 1.0, 50, StandardRobot)))
-# print ('avg time steps: ' + str(run_simulation(1, 1.0, 1, 10, 10, 3, 0.8, 50, StandardRobot)))
-# print ('avg time steps: ' + str(run_simulation(1, 1.0, 1, 10, 10, 3, 0.9, 50, StandardRobot)))
-# print ('avg time steps: ' + str(run_simulation(1, 1.0, 1, 20, 20, 3, 0.5, 50, StandardRobot)))
-# print ('avg time steps: ' + str(run_simulation(3, 1.0, 1, 20, 20, 3, 0.5, 50, StandardRobot)))
+# uncoment to teset run_simulation
+#print ('avg time steps: ' + str(run_simulation(1, 1.0, 1, 5, 5, 3, 1.0, 50, StandardRobot)))
+#print ('avg time steps: ' + str(run_simulation(1, 1.0, 1, 10, 10, 3, 0.8, 50, StandardRobot)))
+#print ('avg time steps: ' + str(run_simulation(1, 1.0, 1, 10, 10, 3, 0.9, 50, StandardRobot)))
+#print ('avg time steps: ' + str(run_simulation(1, 1.0, 1, 20, 20, 3, 0.5, 50, StandardRobot)))
+#print ('avg time steps: ' + str(run_simulation(3, 1.0, 1, 20, 20, 3, 0.5, 50, StandardRobot)))
 
 # === Problem 6
-#
 # ANSWER THE FOLLOWING QUESTIONS:
 #
 # 1)How does the performance of the two robot types compare when cleaning 80%
 #		of a 20x20 room?
-#
+#		The Standard Robot performs the tast in ~80 of the time of the FaultyRobot.
+#		See Figure 1 PNG file.
 #
 # 2) How does the performance of the two robot types compare when two of each
 #		robot cleans 80% of rooms with dimensions 
 #		10x30, 20x15, 25x12, and 50x6?
-#
-#
 
 def show_plot_compare_strategies(title, x_label, y_label):
 	"""
@@ -487,8 +503,8 @@ def show_plot_compare_strategies(title, x_label, y_label):
 	times2 = []
 	for num_robots in num_robot_range:
 		print ("Plotting", num_robots, "robots...")
-		times1.append(run_simulation(num_robots, 1.0, 1, 20, 20, 3, 0.8, 20, StandardRobot))
-		times2.append(run_simulation(num_robots, 1.0, 1, 20, 20, 3, 0.8, 20, FaultyRobot))
+		times1.append(run_simulation(num_robots, 1.0, 1, 20, 20, 3, 0.8, 100, StandardRobot))
+		times2.append(run_simulation(num_robots, 1.0, 1, 20, 20, 3, 0.8, 100, FaultyRobot))
 	pylab.plot(num_robot_range, times1)
 	pylab.plot(num_robot_range, times2)
 	pylab.title(title)
@@ -505,7 +521,7 @@ def show_plot_room_shape(title, x_label, y_label):
 	times1 = []
 	times2 = []
 	for width in [10, 20, 25, 50]:
-		height = 300/width
+		height = math.floor(300/width)
 		print ("Plotting cleaning time for a room of width:", width, "by height:", height)
 		aspect_ratios.append(float(width) / height)
 		times1.append(run_simulation(2, 1.0, 1, width, height, 3, 0.8, 200, StandardRobot))
@@ -518,22 +534,13 @@ def show_plot_room_shape(title, x_label, y_label):
 	pylab.ylabel(y_label)
 	pylab.show()
 
-
-#show_plot_compare_strategies('Time to clean 80% of a 20x20 room, for various numbers of robots','Number of robots','Time / steps')
-#show_plot_room_shape('Time to clean 80% of a 300-tile room for various room shapes','Aspect Ratio', 'Time / steps')
+# tests for show_plot_compare strategies and show_plot_room_shape
+#	show_plot_compare_strategies('Compare FaultyRobot and StandardRobots Algorithms in 20x30 EmptyRoom',
+#			'Number of robots', 'Time / Step')
+#	show_plot_room_shape('Compare StandardRobot and FaulttyRobot in Various Rooms Shapes of 300 tiles',
+#			'Aspect Ratio' , 'Time / Steps')
 
 if __name__ == '__main__':
+#	show_plot_compare_strategies('Time to clean 80% of a 20x20 room, for various numbers of robots','Number of robots','Time / steps')
+#	show_plot_room_shape('Time to clean 80% of a 300-tile room for various room shapes','Aspect Ratio', 'Time / steps')
 	pass
-# FIXME: robot's cone of vision seems to face the wrong direciton...
-
-# Uncomment this line to see your implementation of StandardRobot in action!
-#	test_robot_movement(StandardRobot, EmptyRoom)
-#	test_robot_movement(StandardRobot, FurnishedRoom)
-
-	test_robot_movement(FaultyRobot, EmptyRoom)
-
-#	r = RectangularRoom(2,4,50)
-#	print(r.tiles)
-#	p1 = Position(1,1)
-#	r.clean_tile_at_position(p1,20)
-#	print(r.tiles)
