@@ -224,8 +224,6 @@ class Robot(object):
 
 		position: a Position object.
 		"""
-		if not isinstance(position, Position):
-			raise TypeError
 		self.pos = position
 
 	def set_robot_direction(self, direction):
