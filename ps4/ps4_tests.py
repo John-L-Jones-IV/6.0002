@@ -3,6 +3,7 @@
 
 import sys
 import unittest
+import numpy as np
 
 import ps4
 
@@ -168,25 +169,61 @@ population = [[100, 115, 122, 129, 134, 138, 151, 167, 174, 183, 196, 208, 215, 
 765, 767, 767, 767, 770, 768, 775]]
 
 class ps4_calc(unittest.TestCase):
-	def test_calc_pop_avg(self):
-		avg = 762.5
-		calc_avg = ps4.calc_pop_avg(population, 299)
-		print(calc_avg)
-		self.assertTrue(avg-1 < calc_avg < avg+1, "Got incorrect population average {} instead of {}.".format(calc_avg, avg))
+    def test_calc_pop_avg(self):
+        avg = 762.5
+        calc_avg = ps4.calc_pop_avg(population, 299)
+        print(calc_avg)
+        self.assertTrue(avg-1 < calc_avg < avg+1,
+            "Got incorrect population average {} instead of {}.".format(calc_avg, avg))
 
-	def test_calc_pop_std(self):
-		std = 10.735455276791944
-		calc_std = ps4.calc_pop_std(population, 299)
-		print(calc_std)
-		self.assertTrue(std -0.1 < calc_std < std + 0.1, "Got incorrect population standard deviation {} instead of {}.".format(calc_std, std))
+    def test_calc_pop_std(self):
+        std = 10.735455276791944
+        calc_std = ps4.calc_pop_std(population, 299)
+        print(calc_std)
+        self.assertTrue(std -0.1 < calc_std < std + 0.1,
+            "Got incorrect population standard deviation {} instead of {}.".format(calc_std, std))
 
-	def test_calc_95_ci(self):
-		ci_95 = 6.6539041171330382
-		calc_avg, calc_ci_95 = ps4.calc_95_ci(population, 299)
-		print(calc_ci_95)
-		self.assertTrue(ci_95 - 0.1 < calc_ci_95 < ci_95 + 0.1, "Got incorrect population 95% CI {} instead of {}.".format(calc_ci_95, ci_95))
+    def test_calc_95_ci(self):
+        ci_95 = 6.6539041171330382
+        calc_avg, calc_ci_95 = ps4.calc_95_ci(population, 299)
+        print(calc_ci_95)
+        self.assertTrue(ci_95 - 0.1 < calc_ci_95 < ci_95 + 0.1,
+            "Got incorrect population 95% CI {} instead of {}.".format(calc_ci_95, ci_95))
+
+class ps4_classes(unittest.TestCase):
+    def test_simpleBacteria_is_killed(self):
+        b1 = ps4.SimpleBacteria(0.0, 1.0)
+        b2 = ps4.SimpleBacteria(1.0, 0.0)
+        self.assertTrue(b1.is_killed(),
+            'Expected SimpleBacteria(0.0, 1.0) to be killed with is_killed()')
+        self.assertFalse(b2.is_killed(),
+            'Expected SimpleBacteria(1.0, 0.0) to be survive with is_killed()')
+
+    def test_simpleBacteria_reproduce(self):
+        b1 = ps4.SimpleBacteria(0.0, 1.0)
+        b2 = ps4.SimpleBacteria(1.0, 0.0)
+        with self.assertRaises(ps4.NoChildException):
+            b1.reproduce(0)
+        with self.assertRaises(ps4.NoChildException):
+            b2.reproduce(1)
+        offspring_b = b2.reproduce(0)
+        self.assertIs(type(offspring_b), ps4.SimpleBacteria, 'offspring should be a SimpleBacteria')
+        self.assertEqual(offspring_b.birth_prob, 1.0)
+        self.assertEqual(offspring_b.death_prob, 0.0)
+
+class test_functions(unittest.TestCase):
+    def test_calc_pop_avg(self):
+        population = [[1, 2, 3],[2, 5, 9],[6, 7, 10]]
+        self.assertEqual(ps4.calc_pop_avg(population, 0), 2 , 'expected 2')
+        self.assertEqual(ps4.calc_pop_avg(population, 1), 16/3, 'expected 5 1/3')
+        self.assertEqual(ps4.calc_pop_avg(population, 2), 23/3, 'expected 7 2/3')
+        populations = np.array([[1, 2, 3], [10, 20, 30]])
+        self.assertEqual(ps4.calc_pop_avg(populations, 0), 2)
+        self.assertEqual(ps4.calc_pop_avg(populations, 1), 20)
 
 if __name__ == "__main__":
-	suite = unittest.TestSuite()
-	suite.addTest(unittest.makeSuite(ps4_calc))
-	unittest.TextTestRunner(verbosity=3).run(suite)
+    suite = unittest.TestSuite()
+#    suite.addTest(unittest.makeSuite(ps4_calc))
+    suite.addTest(unittest.makeSuite(ps4_classes))
+    suite.addTest(unittest.makeSuite(test_functions))
+    unittest.TextTestRunner(verbosity=3).run(suite)
