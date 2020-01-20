@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # Problem Set 4: Simulating the Spread of Disease and Bacteria Population Dynamics
-# Name: 
+# Name: John L. Jones IV
 # Collaborators (Discussion):
-# Time:
+# Time: 2 long.
 import math
 import numpy as np
 import pylab as pl
@@ -267,6 +267,9 @@ def simulation_without_antibiotic(num_bacteria,
         'Simple Bacteria Without Antibiotics')
 
     return populations
+
+# When you are ready to run the simulation, uncomment the next line
+populations = simulation_without_antibiotic(100, 1000, 0.1, 0.025, 50)
 
 ##########################
 # PROBLEM 3
@@ -542,25 +545,25 @@ def simulation_with_antibiotic(num_bacteria,
             resistant_pop[i][j] is the number of resistant bacteria for
             trial i at time step j
     """
-    populations = np.empty([num_trials, 400])
-    resistant_pop = np.empty([num_trials, 400])
+    populations = np.empty([400, num_trials])
+    resistant_pop = np.empty([400, num_trials])
     for i in range(num_trials):
         bacteria = [ResistantBacteria(birth_prob, death_prob, resistant,
             mut_prob)]*num_bacteria
         patient = TreatedPatient(bacteria, max_pop)
         for t in range(150):
-            populations[i][t] = patient.get_total_pop()
-            resistant_pop[i][t] = patient.get_resist_pop()
+            populations[t][i] = patient.get_total_pop()
+            resistant_pop[t][i] = patient.get_resist_pop()
             patient.update()
         patient.set_on_antibiotic()
         for t in range(150, 400):
-            populations[i][t] = patient.get_total_pop()
-            resistant_pop[i][t] = patient.get_resist_pop()
+            populations[t][i] = patient.get_total_pop()
+            resistant_pop[t][i] = patient.get_resist_pop()
             patient.update()
 
     # plot results
-    avg_bact = np.sum(populations, 0)
-    avg_resist_bact = np.sum(resistant_pop, 0)
+    avg_bact = np.sum(populations, 1)
+    avg_resist_bact = np.sum(resistant_pop, 1)
     make_two_curve_plot(np.arange(400), avg_bact, avg_resist_bact,
         'Total', 'Resistant', 'Timestep', 'Average Population',
         'With an  Antibiotic')
@@ -569,21 +572,28 @@ def simulation_with_antibiotic(num_bacteria,
 
 # When you are ready to run the simulations, uncomment the next lines one
 # at a time
-total_pop, resistant_pop = simulation_with_antibiotic(num_bacteria=100,
-                                                      max_pop=1000,
-                                                      birth_prob=0.3,
-                                                      death_prob=0.2,
-                                                      resistant=False,
-                                                      mut_prob=0.8,
-                                                      num_trials=50)
-
-total_pop, resistant_pop = simulation_with_antibiotic(num_bacteria=100,
-                                                      max_pop=1000,
-                                                      birth_prob=0.17,
-                                                      death_prob=0.2,
-                                                      resistant=False,
-                                                      mut_prob=0.8,
-                                                      num_trials=50)
+# 
+# total_pop, resistant_pop = simulation_with_antibiotic(num_bacteria=100,
+#                                                       max_pop=1000,
+#                                                       birth_prob=0.3,
+#                                                       death_prob=0.2,
+#                                                       resistant=False,
+#                                                       mut_prob=0.8,
+#                                                       num_trials=50)
+# 
+# print(calc_95_ci(total_pop, 299))
+# print(calc_95_ci(resistant_pop, 299))
+# 
+# total_pop, resistant_pop = simulation_with_antibiotic(num_bacteria=100,
+#                                                       max_pop=1000,
+#                                                       birth_prob=0.17,
+#                                                       death_prob=0.2,
+#                                                       resistant=False,
+#                                                       mut_prob=0.8,
+#                                                       num_trials=50)
+# 
+# print(calc_95_ci(total_pop, 299))
+# print(calc_95_ci(resistant_pop, 299))
 
 def main():
     pass
