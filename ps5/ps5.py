@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # Problem Set 5: Experimental Analysis
-# Name: 
+# Name: John L. Jones IV 
 # Collaborators (discussion):
 # Time:
 
-import pylab
+import pylab # numpy and matplotlib bundle, depreciated...
+# import numpy as np
+# import matplotlib.pyplot as plt
 import re
 
 # cities in our weather data
@@ -164,8 +166,10 @@ def generate_models(x, y, degs):
         a list of pylab arrays, where each array is a 1-d array of coefficients
         that minimizes the squared error of the fitting polynomial
     """
-    # TODO
-    pass
+    l = []
+    for d in degs:
+        l.append(pylab.polyfit(x, y, d))
+    return l
 
 
 def r_squared(y, estimated):
@@ -181,8 +185,14 @@ def r_squared(y, estimated):
     Returns:
         a float for the R-squared error term
     """
-    # TODO
-    pass
+    SSres = 0
+    SStot = 0
+    N = len(y)
+    u = pylab.mean(y)
+    for i in range(N):
+        SSres += (y[i] - estimated[i])**2
+        SStot += (y[i] - u)**2
+    return 1 - (SSres/SStot)
 
 def evaluate_models_on_training(x, y, models):
     """
@@ -210,8 +220,9 @@ def evaluate_models_on_training(x, y, models):
     Returns:
         None
     """
-    # TODO
-    pass
+    l_R2 = []
+    for model in models:
+        pass    # l_R2.append(compute R^2)
 
 def gen_cities_avg(climate, multi_cities, years):
     """
@@ -311,7 +322,8 @@ def evaluate_models_on_testing(x, y, models):
 
 if __name__ == '__main__':
 
-    pass 
+    print(generate_models(pylab.array([1961, 1962, 1963]),
+        pylab.array([-4.4, -5.5, -6.6]), [1, 2]))
 
     # Part A.4
     # TODO: replace this line with your code
